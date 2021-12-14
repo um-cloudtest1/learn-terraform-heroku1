@@ -1,7 +1,7 @@
 provider "heroku" {}
 
 resource "heroku_app" "example" {
-  name   = "learn-terraform-heroku"
+  name   = "learn-terraform-heroku1"  # changed: added "1" since learn-terraform-heroku is already taken
   region = "us"
 }
 
@@ -16,6 +16,15 @@ resource "heroku_build" "example" {
   source {
     path = "./app"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "heroku_addon" "logging" {
+  app  = heroku_app.example.id
+  plan = "papertrail:choklad"
 }
 
 variable "app_quantity" {
